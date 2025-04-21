@@ -19,8 +19,8 @@ namespace Caso2.Models
         public string Telefono { get; set; }
 
 
-        [Required(ErrorMessage = "Este campo es requerido.")]
-        [RegularExpression(@"^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$", ErrorMessage = "La contraseña debe tener entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula y al menos una mayúscula")]
+        //[Required(ErrorMessage = "Este campo es requerido.")]
+        //[RegularExpression(@"^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$", ErrorMessage = "La contraseña debe tener entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula y al menos una mayúscula")]
         public string Contraseña { get; set; }
         public string Rol { get; set; } = "Usuario";  // Administrador, Organizador, Usuario.
 
@@ -29,7 +29,7 @@ namespace Caso2.Models
         public ICollection<Categoria>? Categorias { get; set; }
         public ICollection<Evento>? Eventos { get; set; }
 
-        public ICollection<EventoUsuario> Asistencias { get; set; }
+        public ICollection<EventoUsuario>? Asistencias { get; set; }
 
 
 

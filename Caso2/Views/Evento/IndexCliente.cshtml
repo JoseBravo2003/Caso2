@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Caso2.Models.Evento>
+
+@{
+    ViewData["Title"] = "Eventos Disponibles";
+}
+
+<h2 class="my-4">Eventos Disponibles</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-light">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Titulo)</th>
+            <th>@Html.DisplayNameFor(model => model.Fecha)</th>
+            <th>@Html.DisplayNameFor(model => model.Hora)</th>
+            <th>@Html.DisplayNameFor(model => model.CupoMaximo)</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Titulo)</td>
+                <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                <td>@item.Hora</td>
+                <td>@item.CupoMaximo</td>
+                <td>
+                    <a asp-action="Registrar" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
+                        Registrarse
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
