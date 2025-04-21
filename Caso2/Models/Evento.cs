@@ -32,9 +32,11 @@ namespace Caso2.Models
         [Range(1, 1000, ErrorMessage = "Cupo debe ser entre 1 y 1000.")]
         public int CupoMaximo { get; set; }
 
-     
 
-        public ICollection<EventoUsuario> Asistentes { get; set; }
+
+        public ICollection<EventoUsuario> Asistentes { get; set; } = new List<EventoUsuario>();
+
+
 
 
         public DateTime? FechaRegistro { get; set; } = DateTime.Now;

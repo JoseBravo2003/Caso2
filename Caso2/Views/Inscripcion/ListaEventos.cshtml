@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Caso2.Models.Evento>
+@{
+    ViewData["Title"] = "Eventos disponibles";
+}
+
+<h2>Eventos disponibles</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Exito"] != null)
+{
+    <div class="alert alert-success">@TempData["Exito"]</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Ubicación</th>
+            <th>Cupo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+            <tr>
+                <td>@e.Titulo</td>
+                <td>@e.Fecha.ToShortDateString()</td>
+                <td>@e.Hora</td>
+                <td>@e.Ubicacion</td>
+                <td>@e.Asistentes?.Count / @e.CupoMaximo</td>
+                <td>
+                    <form asp-action="Inscribirse" asp-controller="Inscripcion" method="post">
+                        <input type="hidden" name="eventoId" value="@e.Id" />
+                        <input type="hidden" name="usuarioId" value="1" /> <!-- CAMBIA este ID por el actual usuario logueado -->
+                        <button class="btn btn-success">Inscribirse</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -14,7 +14,7 @@ namespace Caso2
 
             builder.Services.AddDbContext<EventCorpDbContext>(op =>
             {
-                op.UseSqlServer(builder.Configuration.GetConnectionString("EventCorp"));
+                op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
 
@@ -27,6 +27,37 @@ namespace Caso2
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.MapGet("/api/events", async (EventCorpDbContext db) =>
+            {
+                return await db.Eventos
+                    .Select(e => new {
+                        e.Id,
+                        e.Titulo,
+                        e.Descripcion,
+                        e.Fecha,
+                        e.Hora,
+                        e.Ubicacion,
+                        e.CupoMaximo
+                    }).ToListAsync();
+            });
+
+            app.MapGet("/api/events/{id}", async (int id, EventCorpDbContext db) =>
+            {
+                var evento = await db.Eventos
+                    .Where(e => e.Id == id)
+                    .Select(e => new {
+                        e.Id,
+                        e.Titulo,
+                        e.Descripcion,
+                        e.Fecha,
+                        e.Hora,
+                        e.Ubicacion,
+                        e.CupoMaximo
+                    }).FirstOrDefaultAsync();
+
+                return evento is null ? Results.NotFound() : Results.Ok(evento);
+            });
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
