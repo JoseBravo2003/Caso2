@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Caso2.Models
 {
-    public class Evento
+    public class Evento : IValidatableObject
     {
         [Key]
         public int Id { get; set; }
@@ -46,6 +46,15 @@ namespace Caso2.Models
 
         public Usuario? Usuario { get; set; }
         public int UsuarioRegistro { get; set; }
+
+        //Validacion para la fecha 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Fecha < DateTime.Today)
+            {
+                yield return new ValidationResult("La fecha no puede ser en el pasado.", new[] { nameof(Fecha) });
+            }
+        }
 
     }
 }

@@ -1,24 +1,27 @@
+using Microsoft.EntityFrameworkCore; // Importar Entity Framework Core
 using Caso2.Models;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Caso2
+var builder = WebApplication.CreateBuilder(args);
+
+// Configurar el DbContext con la cadena de conexión desde appsettings.json
+builder.Services.AddDbContext<EventCorpDbContext>(op =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+    op.UseSqlServer(builder.Configuration.GetConnectionString("EventCorp"));
+});
+// Habilitar el uso de sesiones
+builder.Services.AddDistributedMemoryCache(); // Necesario para almacenar sesiones en memoria
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(1); // Tiempo de expiración de la sesión
+    options.Cookie.HttpOnly = true; // Asegura que la cookie de sesión no sea accesible por scripts
+    options.Cookie.IsEssential = true; // Necesario para que funcione en GDPR-compliance
+});
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+// Agregar servicios para controladores y vistas
+builder.Services.AddControllersWithViews();
 
-            builder.Services.AddDbContext<EventCorpDbContext>(op =>
-            {
-                op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-
-
-            var app = builder.Build();
+var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -58,19 +61,27 @@ namespace Caso2
                 return evento is null ? Results.NotFound() : Results.Ok(evento);
             });
 
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            app.Run();
-        }
-    }
+// Configuración del pipeline de solicitudes HTTP
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts(); // Habilitar HSTS (HTTP Strict Transport Security)
 }
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseSession(); // Middleware para usar sesiones
+
+app.UseAuthorization();
+
+// Configurar la ruta predeterminada
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Acceso}/{action=InicioSesion}/{id?}");
+
+app.Run();
+
+
