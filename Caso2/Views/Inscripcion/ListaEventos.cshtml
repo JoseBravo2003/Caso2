@@ -33,15 +33,16 @@
                 <td>@e.Fecha.ToShortDateString()</td>
                 <td>@e.Hora</td>
                 <td>@e.Ubicacion</td>
-                <td>@e.Asistentes?.Count / @e.CupoMaximo</td>
+                <td>@e.Asistentes.Count / @e.CupoMaximo</td>
                 <td>
-                    <form asp-action="Inscribirse" asp-controller="Inscripcion" method="post">
+                    <form asp-controller="Inscripcion" asp-action="Inscribirse" method="post">
                         <input type="hidden" name="eventoId" value="@e.Id" />
-                        <input type="hidden" name="usuarioId" value="1" /> <!-- CAMBIA este ID por el actual usuario logueado -->
-                        <button class="btn btn-success">Inscribirse</button>
+                        <button type="submit" class="btn btn-success">Inscribirse</button>
                     </form>
                 </td>
             </tr>
         }
     </tbody>
+
+
 </table>

@@ -33,19 +33,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Eventos" asp-action="Crear">Nuevo Evento</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Categorias" asp-action="Crear">Nueva Categoría</a>
-                        </li>
+                            </ul>
+                            </div>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Inscripcion" asp-action="ListaEventos">
-                                Eventos disponibles
-                            </a>
-                        </li>
 
 
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -71,6 +61,7 @@
                                         <i class="fas fa-calendar-alt pe-2"></i>Eventos
                                     </a>
                                 </li>
+
                             }
                             else if (usuarioRol == "Organizador")
                             {
@@ -79,14 +70,14 @@
                                         <i class="fas fa-calendar-alt pe-2"></i>Mis Eventos
                                     </a>
                                 </li>
+
                             }
                             else if (usuarioRol == "Usuario")
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link mx-2 text-dark" asp-controller="Evento" asp-action="IndexCliente">
-                                        <i class="fas fa-calendar-check pe-2"></i>Eventos Disponibles
-                                    </a>
-                                </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Inscripcion" asp-action="ListaEventos"> Eventos disponibles </a>
+                        </li>
                             }
 
                             <li class="nav-item ms-3">

@@ -22,41 +22,23 @@ namespace Caso2.Controllers
 
             return View(eventos);
         }
-
-
         [HttpPost]
-        public IActionResult Inscribirse(int eventoId, int usuarioId)
+        public IActionResult Inscribirse(int eventoId)
         {
-            var evento = _context.Eventos.Include(e => e.Asistentes).FirstOrDefault(e => e.Id == eventoId);
-            if (evento == null) return NotFound();
-
-            var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == usuarioId);
-            if (usuario == null) return NotFound();
-
-            var horaInicio = evento.Fecha.Add(evento.Hora);
-            var horaFin = horaInicio.AddMinutes(evento.Duracion);
-
-            var conflictos = _context.EventoUsuarios
-    .Include(eu => eu.Evento)
-    .Where(eu => eu.UsuarioId == usuarioId)
-    .ToList()
-    .Any(eu =>
-    {
-        var inicio = eu.Evento.Fecha.Add(eu.Evento.Hora);
-        var fin = inicio.AddMinutes(eu.Evento.Duracion);
-        return horaInicio < fin && horaFin > inicio;
-    });
-
-
-            if (conflictos)
+            var usuarioIdStr = HttpContext.Session.GetString("UsuarioId");
+            if (string.IsNullOrEmpty(usuarioIdStr))
             {
-                TempData["Error"] = "Conflicto con otro evento inscrito.";
-                return RedirectToAction("ListaEventos");
+                TempData["Error"] = "Debe iniciar sesión para inscribirse.";
+                return RedirectToAction("InicioSesion", "Acceso");
             }
 
-            if (evento.Asistentes.Count >= evento.CupoMaximo)
+            int usuarioId = int.Parse(usuarioIdStr);
+
+            // Verificar que no esté ya inscrito
+            bool yaInscrito = _context.EventoUsuarios.Any(eu => eu.EventoId == eventoId && eu.UsuarioId == usuarioId);
+            if (yaInscrito)
             {
-                TempData["Error"] = "Este evento ya alcanzó el cupo máximo.";
+                TempData["Error"] = "Ya estás inscrito en este evento.";
                 return RedirectToAction("ListaEventos");
             }
 
@@ -73,6 +55,7 @@ namespace Caso2.Controllers
             TempData["Exito"] = "Inscripción exitosa.";
             return RedirectToAction("ListaEventos");
         }
+
 
         public IActionResult VerInscritos(int eventoId)
         {
@@ -96,4 +79,3 @@ namespace Caso2.Controllers
         }
     }
 }
-

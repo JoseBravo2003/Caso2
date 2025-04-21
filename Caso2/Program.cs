@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Configurar el DbContext con la cadena de conexión desde appsettings.json
 builder.Services.AddDbContext<EventCorpDbContext>(op =>
 {
-    op.UseSqlServer(builder.Configuration.GetConnectionString("EventCorp"));
+    op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 // Habilitar el uso de sesiones
 builder.Services.AddDistributedMemoryCache(); // Necesario para almacenar sesiones en memoria
